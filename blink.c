@@ -1,46 +1,84 @@
-/* Blink Example
 
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
 #include <stdio.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+
 #include "driver/gpio.h"
 #include "sdkconfig.h"
+#include "proj_inc/main.h"
+#include "proj_inc/motors_setting.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include <time.h>
 
-/* Can run 'make menuconfig' to choose the GPIO to blink,
-   or you can edit the following line and set a number here.
-*/
-#define BLINK_GPIO GPIO_SEL_2
+#define LED_INDICATOR 2
 
-void blink_task(void *pvParameter)
+void setNewState(unsigned char newState)
 {
-    /* Configure the IOMUX register for pad BLINK_GPIO (some pads are
-       muxed to GPIO on reset already, but some default to other
-       functions and need to be switched to GPIO. Consult the
-       Technical Reference for a list of pads and their default
-       functions.)
-    */
-    gpio_pad_select_gpio(BLINK_GPIO);
-    /* Set the GPIO as a push/pull output */
-    gpio_set_direction(BLINK_GPIO, GPIO_MODE_OUTPUT);
-    while(1) {
-        /* Blink off (output low) */
-        gpio_set_level(BLINK_GPIO, 0);
-        printf("gpio is off");
-        vTaskDelay(10000 / portTICK_PERIOD_MS);
-        /* Blink on (output high) */
-        gpio_set_level(BLINK_GPIO, 1);
-        printf("gpio is on");
-        vTaskDelay(10000 / portTICK_PERIOD_MS);
-    }
+	yoloState = newState;
 }
+
+unsigned char getState()
+{
+	return yoloState;
+}
+
+void initSettings()
+{
+
+	setNewState(HOMING_SETUP);
+/**** ortal old tests *********/
+//	gpio_pad_select_gpio(LED_INDICATOR);
+//	gpio_set_direction(LED_INDICATOR, GPIO_MODE_OUTPUT);
+//	xTaskCreatePinnedToCore(
+//			 	 	 	 ortal,          /* Task function. */
+//	                    "TaskOne",        /* String with name of task. */
+//	                    10000,            /* Stack size in bytes. */
+//	                    NULL,             /* Parameter passed as input of the task */
+//	                    1,                /* Priority of the task. */
+//	                    NULL,            /* Task handle. */
+//						CORE_ZERO);
+//
+//	xTaskCreatePinnedToCore(
+//	                    taskTwo,          /* Task function. */
+//	                    "TaskTwo",        /* String with name of task. */
+//	                    10000,            /* Stack size in bytes. */
+//	                    NULL,             /* Parameter passed as input of the task */
+//	                    1,                /* Priority of the task. */
+//	                    NULL,            /* Task handle. */
+//						CORE_ONE);
+//	vTaskDelay(1000 / portTICK_PERIOD_MS);
+}
+
 
 void app_main()
 {
-    xTaskCreate(&blink_task, "blink_task", configMINIMAL_STACK_SIZE, NULL, 5, NULL);
+	printf("start our main loop\n");
+	initSettings();
+	while(1)
+	{
+		printf("main loop\n");
+
+		switch (yoloState)
+		{
+			case HOMING_SETUP:
+				break;
+
+			case RFID_CHECK:
+				break;
+
+			case MIXING:
+				break;
+
+			case HOMING:
+				break;
+
+			case AMOUNT_SETUP:
+				break;
+
+			default:
+				break;
+
+		}
+
+
+	}
 }
