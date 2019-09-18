@@ -48,7 +48,7 @@ void initSettings()
 //	vTaskDelay(1000 / portTICK_PERIOD_MS);
 }
 
-
+//check
 void app_main()
 {
 	printf("start our main loop\n");
