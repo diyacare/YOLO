@@ -25,7 +25,10 @@ void homing_state(void *param)
 
 void motorSteps(void *param)
 {
-	unsigned short numOfRounds;
+
+	unsigned char motorNum;
+
+	motorNum = (unsigned char *)param;
 
 	do{
 
@@ -34,7 +37,7 @@ void motorSteps(void *param)
 	printf("Motor steps settings\n");
 	for (int step = 0; step < 400; ++step)
 	{
-		if (gpio_get_level(LED_ENDCTOR))
+		if (gpio_get_level(motorParam[motorNum].stepGpio))
 			break;
 
 		gpio_set_level(MTR1_DRI, 0);
