@@ -50,8 +50,27 @@ void rfidInit()
     printf("spi init status is %d", rc);
     // TO DO - maybe we should add an assert that only rc is OK continue
 
+    memset(recvbuf, 0, sizeof(recvbuf));
+
+    //Set up a transaction of 128 bytes to send/receive
+    t.length    = 128*8;
+    t.tx_buffer = sendbuf;
+    t.rx_buffer = recvbuf;
 
     //ret=spi_slave_transmit(HSPI_HOST, &t, portMAX_DELAY);
 
 }
 
+void rfidGetYoloSettings()
+{
+
+   unsigned char rc;
+   unsigned short n;
+
+   n = 0;
+   rc = spi_slave_transmit(HSPI_HOST, &t, portMAX_DELAY);
+
+   printf("Received: %s\n", recvbuf);
+   n++;
+
+}
